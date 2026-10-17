@@ -1,7 +1,3 @@
-
----
-
-```markdown
 # 🚀 Dynamic Credit Risk & Fraud Detection MLOps System
 
 An end-to-end, production-grade MLOps pipeline built for tabular classification. This project demonstrates how to solve real-world machine learning engineering challenges—focusing on **Data Version Control (DVC)**, **Experiment Tracking & Lineage (MLflow)**, **Model Degradation/Drift Detection**, and **Low-Latency Serving (FastAPI & Docker)**.
@@ -18,12 +14,12 @@ An end-to-end, production-grade MLOps pipeline built for tabular classification.
 
 ### 2. Live FastAPI Swagger Docs & Inference Endpoint
 *Low-latency real-time scoring via FastAPI.*
-![FastAPI Endpoint Docs](assets/fastapi_respon.png)
+![FastAPI Endpoint Docs](assets/fastapi_response.png)
 
 ---
 
 ## 🛠️ Tech Stack & Tools
-* **Language:** Python 3.9+
+* **Language:** Python 3.13+
 * **Core Modeling:** XGBoost, Scikit-Learn, Pandas, NumPy
 * **Data Versioning:** DVC (Data Version Control) & Git
 * **Experiment Tracking & Registry:** MLflow
@@ -35,19 +31,20 @@ An end-to-end, production-grade MLOps pipeline built for tabular classification.
 ## 📂 Project Directory Structure
 
 ```text
-credit-scoring-mlops/
-├── data/
-│   ├── raw/
-│   │   ├── credit_data.csv          # Active dataset version tracked by DVC
-│   │   └── credit_data.csv.dvc      # DVC pointer file
-│   └── processed/                   # Processed data artifacts
-├── model/
-│   └── model.ubj                    # Production-ready serialized XGBoost binary
+credit-score-mlops/
 ├── src/
-│   ├── __init__.py
-│   ├── train.py                     # Training script with MLflow logging & Git hash tagging
-│   └── app.py                       # FastAPI application for model serving
-├── assets/                          # Screenshots and media for README
+│   ├── app.py                       # FastAPI application for model serving
+│   └── credit_score_mlops/
+│       ├── data/
+│       │   ├── raw/
+│       │   └── processed/
+│       ├── dataset_drift_creator.ipynb
+│       ├── model/
+│       │   └── model.ubj
+│       └── train.ipynb
+├── assets/
+│   ├── fastapi_response.png
+│   └── mlflow_drift_comparison.png
 ├── Dockerfile                       # Container configuration
 ├── requirements.txt                 # Project dependencies
 └── README.md
@@ -70,17 +67,17 @@ credit-scoring-mlops/
 ### 1. Clone the Repository
 
 ```bash
-git clone [https://github.com/abhishek-codeit/ml-project.git]https://github.com/abhishek-codeit/ml-project.git)
-cd credit-scoring-mlops
+git clone https://github.com/abhishek-codeit/ml-project.git credit-score-mlops
+cd credit-score-mlops
 
 ```
 
 ### 2. Set Up Virtual Environment & Dependencies
 
 ```bash
-python -m venv .venv
+python3.13 -m venv .venv
 source .venv/bin/activate   # On Windows use: .venv\Scripts\activate
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 
 ```
 
@@ -91,14 +88,23 @@ dvc pull
 
 ```
 
+This requires access to the DVC remote configured for the project.
+
 ### 4. Run the API Locally
 
 ```bash
-uvicorn src.app:app --reload
+uvicorn src.app:app --host 0.0.0.0 --port 5001 --reload
 
 ```
 
-The interactive documentation will be live at: `http://127.0.0.1:5001/docs`
+The interactive documentation will be available at <http://127.0.0.1:5001/docs>.
+
+To run the API in Docker:
+
+```bash
+docker build -t credit-score-mlops .
+docker run --rm -p 5001:5001 credit-score-mlops
+```
 
 ---
 
@@ -108,7 +114,7 @@ You can test the prediction endpoint by sending a POST request with transaction 
 
 ```bash
 curl -X 'POST' \
-  '[http://127.0.0.1:5001/predict](http://127.0.0.1:5001/predict)' \
+  'http://127.0.0.1:5001/predict' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -132,6 +138,4 @@ curl -X 'POST' \
 **Abhishek**
 
 * [LinkedIn](https://www.linkedin.com/in/abhisheks-codeit)
-* [GitHub](https://www.google.com/search?q=https://github.com/abhishek-codeit)
-
-```
+* [GitHub](https://github.com/abhishek-codeit)
